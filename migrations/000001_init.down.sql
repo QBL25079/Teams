@@ -1,0 +1,3 @@
+DROP SCHEMA IF EXISTS teams;
+DROP TABLE IF EXISTS teams.team;
+DROP TABLE IF EXISTS teams.user;
