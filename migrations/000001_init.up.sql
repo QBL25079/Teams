@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS teams.user (
     last_name   VARCHAR(100) NOT NULL,
     birth_year  SMALLINT NOT NULL 
         CHECK (birth_year > 1900 AND birth_year <= EXTRACT(YEAR FROM CURRENT_DATE)),
-    group_id    INTEGER NOT NULL REFERENCES groups(id) ON DELETE RESTRICT,
+    group_id    INTEGER NULL REFERENCES teams.groups(id) ON DELETE SET NULL,
     created_at  TIMESTAMPTZ DEFAULT NOW(),
     updated_at  TIMESTAMPTZ DEFAULT NOW()
 );
