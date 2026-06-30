@@ -16,11 +16,11 @@ type UserModel struct {
 	UpdatedAt time.Time
 }
 
-func userDomainsFromModels(users []UserModel) []core_domain.User {
-	userDomains := make([]core_domain.User, len(users))
+func userDomainsFromModels(users []UserModel) []domain.User {
+	userDomains := make([]domain.User, len(users))
 
 	for i, user := range users {
-		userDomains[i] = core_domain.NewUser(
+		userDomains[i] = domain.NewUser(
 			user.ID,
 			user.FirstName,
 			user.LastName,

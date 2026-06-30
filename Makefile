@@ -4,26 +4,34 @@ SHELL := powershell.exe
 include .env
 export
 
-.PHONY: all env-up env-down env-cleanup migrate-up run
-
-all: env-up migrate-up run
+export PROJECT_ROOT?=$(CURDIR)
 
 env-up:
 	docker compose up -d teams-postgres
-	Write-Host "Waiting for PostgreSQL..." -ForegroundColor Yellow
-	do { Start-Sleep -Seconds 1; $$ready = docker exec teams-env-postgres pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} 2>$$null; } until ($$LASTEXITCODE -eq 0)
-	Write-Host "PostgreSQL is ready." -ForegroundColor Green
 
 env-down:
-	docker compose down
+	docker compose down teams-postgres
 
 env-cleanup:
-	docker compose down -v --remove-orphans
-	if (Test-Path ".\out\pgdata") { Remove-Item -Recurse -Force ".\out\pgdata" }
-	Write-Host "Cleaned." -ForegroundColor Green
+	$$ans = Read-Host 'Очистить все volume файлы окружения? Опасность утери данных. [Y/N]'; if ($$ans -eq 'Y') { docker compose down teams-postgres port-forwarder; docker volume rm todo_pgdata; Write-Host 'Файлы окружения очищены' } else { Write-Host 'Очистка окружения отменена' }
+
+env-port-forward:
+	@docker compose up -d port-forwarder 
+
+env-port-close:
+	@docker compose down -d port-forwarder 
+
+migrate-create:
+	if (-not '$(seq)') { Write-Host 'seq parameter is required'; exit 1 }; docker compose run --rm teams-postgres-migrate create -ext sql -dir /migrations -seq '$(seq)'
 
 migrate-up:
-	docker run --rm --network teams_teams-network -v "$(CURDIR)/migrations:/migrations" migrate/migrate:v4.19.1 -path=/migrations -database="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@teams-postgres:5432/${POSTGRES_DB}?sslmode=disable" up
+	$(MAKE) migrate-action action=up
 
-run:
-	$$env:POSTGRES_HOST="127.0.0.1"; $$env:POSTGRES_PORT="5432"; $$env:POSTGRES_DATABASE="${POSTGRES_DB}"; $$env:POSTGRES_USER="${POSTGRES_USER}"; $$env:POSTGRES_PASSWORD="${POSTGRES_PASSWORD}"; $$env:POSTGRES_TIMEOUT="${POSTGRES_TIMEOUT}"; go run cmd/teamsapp/main.go
+migrate-down:
+	$(MAKE) migrate-action action=down
+
+migrate-action:
+	@if (-not '$(action)') { Write-Host 'Action parameter is required'; exit 1 }; docker compose run --rm teams-postgres-migrate -path /migrations "-database" "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@teams-postgres:5432/${POSTGRES_DB}?sslmode=disable" $(action)
+
+teams-run:
+	$$env:POSTGRES_HOST = "localhost"; $$env:POSTGRES_PORT = "5433"; $$env:POSTGRES_DATABASE = "${POSTGRES_DB}"; $$env:POSTGRES_USER = "${POSTGRES_USER}"; $$env:POSTGRES_PASSWORD = "${POSTGRES_PASSWORD}"; $$env:POSTGRES_TIMEOUT = "${POSTGRES_TIMEOUT}"; go mod tidy; go run cmd/teamsapp/main.go

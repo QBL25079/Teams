@@ -3,7 +3,7 @@ package user_service
 import (
 	"context"
 
-	core_domain "github.com/QBL25079/teams/internal/core/domain"
+	domain "github.com/QBL25079/teams/internal/core/domain"
 )
 
 type UserService struct {
@@ -11,7 +11,8 @@ type UserService struct {
 }
 
 type UserRepository interface {
-	CreateUser(ctx context.Context, user core_domain.User) (core_domain.User, error)
+	CreateUser(ctx context.Context, user domain.User) (domain.User, error)
+	GetUsers(ctx context.Context, limit, offset *int) ([]domain.User, error)
 }
 
 func NewUserService(userRepositry UserRepository) *UserService {

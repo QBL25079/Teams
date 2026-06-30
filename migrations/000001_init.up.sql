@@ -16,10 +16,10 @@ CREATE TABLE IF NOT EXISTS teams.user (
     last_name   VARCHAR(100) NOT NULL,
     birth_year  SMALLINT NOT NULL 
         CHECK (birth_year > 1900 AND birth_year <= EXTRACT(YEAR FROM CURRENT_DATE)),
-    group_id    INTEGER NULL REFERENCES teams.team(id) ON DELETE SET NULL,
+    team_id    INTEGER NULL REFERENCES teams.team(id) ON DELETE SET NULL,
     created_at  TIMESTAMPTZ DEFAULT NOW(),
     updated_at  TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_user_group_id ON teams.user(group_id);
+CREATE INDEX IF NOT EXISTS idx_user_group_id ON teams.user(team_id);
 CREATE INDEX IF NOT EXISTS idx_user_last_name ON teams.user(last_name);

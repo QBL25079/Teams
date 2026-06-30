@@ -1,4 +1,4 @@
-package core_domain
+package domain
 
 import (
 	"fmt"

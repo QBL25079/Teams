@@ -45,18 +45,14 @@ func main() {
 
 	logger.Debug("Initializing feature ", zap.String("feature", "tasks"))
 
-	//tasksRepository := task_postgres_repo.NewTaskRepository(pool)
-	//taskService := task_service.NewTaskService(tasksRepository)
-	//tasksTransportHTTP := task_transport_http.NewTaskHTTPHandler(taskService)
 
 	logger.Debug("initializing HTTP server")
 
-	httpServer := core_http_server.NewHTTPServer(core_http_server.NewConfigMust(), logger, core_http_middleware.RequestID(), core_http_middleware.Logger(logger), core_http_middleware.Trace(), core_http_middleware.Panic())
+	httpServer := core_http_server.NewHTTPServer(core_http_server.NewConfigMust(), logger, core_http_middleware.RequestID(), core_http_middleware.Logger(logger), core_http_middleware.Trace(), core_http_middleware.Recover())
 
 	apiVersionRouter := core_http_server.NewApiVersionRouter(core_http_server.ApiVersion1)
 
 	apiVersionRouter.RegisterRoutes(usersTransportHTTP.Routes()...)
-	//apiVersionRouter.RegisterRoutes(tasksTransportHTTP.Routes()...)
 
 	httpServer.RegisterAPIRouters(apiVersionRouter)
 

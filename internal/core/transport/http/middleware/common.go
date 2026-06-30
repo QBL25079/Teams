@@ -1,4 +1,4 @@
-package core_http_middleware
+package middleware
 
 import (
 	"net/http"
@@ -43,7 +43,7 @@ func Logger(log *core_logger.Logger) Middleware {
 	}
 }
 
-func Panic() Middleware {
+func Recover() Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			ctx := r.Context()

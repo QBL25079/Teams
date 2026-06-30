@@ -11,9 +11,9 @@ import (
 
 type CreateUserRequest struct {
 	FirstName string `json:"first_name" validate:"required, min=3, max=10"`
-	LastName string `json:"last_name" validate:"required, min=3, max=10"`
-	BirthYear int `json:"birth_yaer" required:"true"`
-	GroupID   *int `json:"group_id" validate:"omitempty"`
+	LastName  string `json:"last_name" validate:"required, min=3, max=10"`
+	BirthYear int    `json:"birth_year" required:"true"`
+	GroupID   *int   `json:"group_id" validate:"omitempty"`
 }
 
 type CreateUserResponse DTOUserResponse
@@ -23,14 +23,14 @@ func (h *UserHTTPHandler) CreateUser(rw http.ResponseWriter, r *http.Request) {
 
 	log := core_logger.FromContext(ctx)
 
-	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw) 
+	responseHandler := core_http_response.NewHTTPResponseHandler(log, rw)
 
 	var request CreateUserRequest
 	log.Debug("Invoce CreateUser Handler")
 
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil{
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		responseHandler.ErrorResponse(err, "failed to decode and validate create user request")
-		return 
+		return
 	}
 	userDomain := domainFromDTO(request)
 	userDomain, err := h.userService.CreateUser(ctx, userDomain)

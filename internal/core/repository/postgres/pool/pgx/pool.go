@@ -1,4 +1,4 @@
-package core_pgx_pool
+package pgx_pool
 
 import (
 	"context"
@@ -15,11 +15,7 @@ type Pool struct {
 }
 
 func NewPool(ctx context.Context, config Config) (*Pool, error) {
-	connectionString := fmt.Sprintf(
-		"postgres://%s:%s@%s:%s/%s?sslmode=disable",
-		config.User, "****", config.Host, config.Port, config.Database,
-	)
-	fmt.Println(connectionString)
+	connectionString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", config.User, config.Password, config.Host, config.Port, config.Database)
 
 	pgxconfig, err := pgxpool.ParseConfig(connectionString)
 
@@ -34,8 +30,6 @@ func NewPool(ctx context.Context, config Config) (*Pool, error) {
 	if err := pool.Ping(ctx); err != nil {
 		return nil, fmt.Errorf("pgxpool ping: %w", err)
 	}
-	fmt.Printf("PG host=%q port=%q db=%q user=%q timeout=%v\n",
-		config.Host, config.Port, config.Database, config.User, config.Timeout)
 
 	return &Pool{Pool: pool, opTimeout: config.Timeout}, nil
 }

@@ -1,4 +1,4 @@
-package core_postgres_pool
+package postgres_pool
 
 import "errors"
 
