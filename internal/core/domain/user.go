@@ -17,7 +17,7 @@ type User struct {
 	UpdatedAt time.Time
 }
 
-func NewUser(ID, BirthYear int, FirstName, LastName string, CreatedAt, UpdatedAt time.Time,  GroupID *int) User {
+func NewUser(ID int, FirstName, LastName string, BirthYear int, GroupID *int, CreatedAt, UpdatedAt time.Time) User {
 	return User{ID: ID, FirstName: FirstName, LastName: LastName, BirthYear: BirthYear, GroupID: GroupID, CreatedAt: CreatedAt, UpdatedAt: UpdatedAt}
 }
 

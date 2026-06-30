@@ -39,8 +39,8 @@ func NewLogger(config Config) (*Logger, error) {
 		return nil, fmt.Errorf("unmarhsal log level: %w", err)
 	}
 
-	if err := os.Mkdir(config.Folder, 0755); err != nil {
-		return nil, fmt.Errorf("Mkdir logfolder: %w", err)
+	if err := os.MkdirAll(config.Folder, 0755); err != nil {
+		return nil, fmt.Errorf("mkdir logfolder: %w", err)
 	}
 
 	timestamp := time.Now().UTC().Format("2006-01-02T15-04-05.000000")
