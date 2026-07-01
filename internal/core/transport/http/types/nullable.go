@@ -29,9 +29,9 @@ func (n *Nullable[T]) UnmarashalJSON(b []byte) error {
 	return nil
 }
 
-func (n *Nullable[T]) ToDomain() domain.Nullable[T] {
-	return domain.Nullable[T]{
-		Value: n.Value,
-		Set: n.Set,
+func (n *Nullable[T]) ToDomain() *T {
+	if !n.Set {
+		return nil
 	}
+	return n.Value
 }

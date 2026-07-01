@@ -23,5 +23,5 @@ func GetIntPathValue(r *http.Request, key string) (int, error) {
 		return 0, fmt.Errorf("ID always positive: %w", core_errors.ErrInvalidArgument)
 	}
 
-	return 0, nil
+	return val, nil
 }

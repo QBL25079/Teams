@@ -11,6 +11,9 @@ import (
 	core_pgx_pool "github.com/QBL25079/teams/internal/core/repository/postgres/pool/pgx"
 	core_http_middleware "github.com/QBL25079/teams/internal/core/transport/http/middleware"
 	core_http_server "github.com/QBL25079/teams/internal/core/transport/http/server"
+	team_repository "github.com/QBL25079/teams/internal/features/teams/repository"
+	team_service "github.com/QBL25079/teams/internal/features/teams/service"
+	teams_transport "github.com/QBL25079/teams/internal/features/teams/transport/http"
 	user_repository "github.com/QBL25079/teams/internal/features/users/repository"
 	user_service "github.com/QBL25079/teams/internal/features/users/service"
 	user_transport_http "github.com/QBL25079/teams/internal/features/users/transport/http"
@@ -43,8 +46,10 @@ func main() {
 	userService := user_service.NewUserService(usersRepository)
 	usersTransportHTTP := user_transport_http.NewUsersHTTPHandler(userService)
 
-	logger.Debug("Initializing feature ", zap.String("feature", "tasks"))
-
+	logger.Debug("Initializing feature ", zap.String("feature", "teams"))
+	teamsRepository := team_repository.NewTeamRepository(pool)
+	teamService := team_service.NewTeamService(teamsRepository)
+	teamHandler := teams_transport.NewTeamHTTPHandler(teamService)
 
 	logger.Debug("initializing HTTP server")
 
@@ -53,6 +58,7 @@ func main() {
 	apiVersionRouter := core_http_server.NewApiVersionRouter(core_http_server.ApiVersion1)
 
 	apiVersionRouter.RegisterRoutes(usersTransportHTTP.Routes()...)
+	apiVersionRouter.RegisterRoutes(teamHandler.Routes()...)
 
 	httpServer.RegisterAPIRouters(apiVersionRouter)
 
