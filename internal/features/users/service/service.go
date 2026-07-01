@@ -12,7 +12,9 @@ type UserService struct {
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, user domain.User) (domain.User, error)
-	GetUsers(ctx context.Context, limit, offset *int) ([]domain.User, error)
+	GetUsers(ctx context.Context, limit, offset, teamID *int) ([]domain.User, error)
+	DeleteUser(ctx context.Context, userID int) error
+	GetUser(ctx context.Context, id int) (domain.User, error)
 }
 
 func NewUserService(userRepositry UserRepository) *UserService {

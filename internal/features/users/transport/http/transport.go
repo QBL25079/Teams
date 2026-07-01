@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	core_domain "github.com/QBL25079/teams/internal/core/domain"
+	"github.com/QBL25079/teams/internal/core/domain"
 	core_http_server "github.com/QBL25079/teams/internal/core/transport/http/server"
 )
 
@@ -13,8 +13,11 @@ type UserHTTPHandler struct {
 }
 
 type UserService interface {
-	CreateUser(ctx context.Context, user core_domain.User) (core_domain.User, error)
-	GetUsers(ctx context.Context, limit, offset *int) ([]core_domain.User, error)
+	CreateUser(ctx context.Context, user domain.User) (domain.User, error)
+	GetUsers(ctx context.Context, limit, offset, teamID *int) ([]domain.User, error)
+	DeleteUser(ctx context.Context, userID int) error
+	GetUser(ctx context.Context, userID int) (domain.User, error)
+	//PatchUser(ctx context.Context, id int, patch domain.UserPatch) (domain.User, error)
 }
 
 func NewUsersHTTPHandler(usersService UserService) *UserHTTPHandler {
@@ -29,9 +32,19 @@ func (h *UserHTTPHandler) Routes() []core_http_server.Route {
 			Handler: h.CreateUser,
 		},
 		{
-			Method: http.MethodGet,
-			Path: "/users",
+			Method:  http.MethodGet,
+			Path:    "/users",
 			Handler: h.GetUsers,
+		},
+		{
+			Method:  http.MethodDelete,
+			Path:    "/users/{id}",
+			Handler: h.DeleteUser,
+		},
+		{
+			Method:  http.MethodGet,
+			Path:    "/users/{id}",
+			Handler: h.GetUser,
 		},
 	}
 }

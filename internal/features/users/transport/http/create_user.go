@@ -13,7 +13,7 @@ type CreateUserRequest struct {
 	FirstName string `json:"first_name" validate:"required, min=3, max=10"`
 	LastName  string `json:"last_name" validate:"required, min=3, max=10"`
 	BirthYear int    `json:"birth_year" required:"true"`
-	GroupID   *int   `json:"group_id" validate:"omitempty"`
+	TeamID   *int   `json:"team_id" validate:"omitempty"`
 }
 
 type CreateUserResponse DTOUserResponse
@@ -49,6 +49,6 @@ func domainFromDTO(dto CreateUserRequest) core_domain.User {
 		FirstName: dto.FirstName,
 		LastName:  dto.LastName,
 		BirthYear: dto.BirthYear,
-		GroupID:   dto.GroupID,
+		TeamID:   dto.TeamID,
 	}
 }

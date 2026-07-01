@@ -30,8 +30,15 @@ migrate-up:
 migrate-down:
 	$(MAKE) migrate-action action=down
 
-migrate-action:
-	@if (-not '$(action)') { Write-Host 'Action parameter is required'; exit 1 }; docker compose run --rm teams-postgres-migrate -path /migrations "-database" "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@teams-postgres:5432/${POSTGRES_DB}?sslmode=disable" $(action)
+migrate-reset:
+	docker compose down -v
+	-powershell -Command "docker volume rm teams_pgdata -ErrorAction SilentlyContinue"
+	docker compose up -d teams-postgres
+	Start-Sleep -Seconds 5
+	$(MAKE) migrate-up
 
+migrate-action:
+	@if (-not '$(action)') { Write-Host 'Action parameter is required'; exit 1 }; 
+	docker compose run --rm teams-postgres-migrate -path /migrations "-database" "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@teams-postgres:5432/${POSTGRES_DB}?sslmode=disable" $(action)
 teams-run:
 	$$env:POSTGRES_HOST = "localhost"; $$env:POSTGRES_PORT = "5433"; $$env:POSTGRES_DATABASE = "${POSTGRES_DB}"; $$env:POSTGRES_USER = "${POSTGRES_USER}"; $$env:POSTGRES_PASSWORD = "${POSTGRES_PASSWORD}"; $$env:POSTGRES_TIMEOUT = "${POSTGRES_TIMEOUT}"; go mod tidy; go run cmd/teamsapp/main.go

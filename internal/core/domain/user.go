@@ -12,13 +12,13 @@ type User struct {
 	FirstName string
 	LastName  string
 	BirthYear int
-	GroupID   *int
+	TeamID    *int
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-func NewUser(ID int, FirstName, LastName string, BirthYear int, GroupID *int, CreatedAt, UpdatedAt time.Time) User {
-	return User{ID: ID, FirstName: FirstName, LastName: LastName, BirthYear: BirthYear, GroupID: GroupID, CreatedAt: CreatedAt, UpdatedAt: UpdatedAt}
+func NewUser(ID int, FirstName, LastName string, BirthYear int, TeamID *int, CreatedAt, UpdatedAt time.Time) User {
+	return User{ID: ID, FirstName: FirstName, LastName: LastName, BirthYear: BirthYear, TeamID: TeamID, CreatedAt: CreatedAt, UpdatedAt: UpdatedAt}
 }
 
 func (u *User) Validate() error {
@@ -37,9 +37,9 @@ func (u *User) Validate() error {
 		return fmt.Errorf("invalid birth_year %d: %w", u.BirthYear, core_errors.ErrInvalidArgument)
 	}
 
-	if u.GroupID != nil {
-		if *u.GroupID <= 0 {
-			return fmt.Errorf("invalid group_id %d: %w", *u.GroupID, core_errors.ErrInvalidArgument)
+	if u.TeamID != nil {
+		if *u.TeamID <= 0 {
+			return fmt.Errorf("invalid group_id %d: %w", *u.TeamID, core_errors.ErrInvalidArgument)
 		}
 	}
 

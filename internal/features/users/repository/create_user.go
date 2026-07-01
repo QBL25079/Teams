@@ -11,9 +11,11 @@ func (r *UserRepository) CreateUser(ctx context.Context, user core_domain.User) 
 	ctx, cancel := context.WithTimeout(ctx, r.pool.OpTimeout())
 	defer cancel()
 
-	query := `INSERT INTO teams.user (first_name, last_name, birth_year, team_id) VALUES ($1, $2, $3, $4) RETURNING id, first_name, last_name, birth_year, team_id, created_at, updated_at;`
+	query := `INSERT INTO teams.user (first_name, last_name, birth_year, team_id) 
+	          VALUES ($1, $2, $3, $4) 
+	          RETURNING id, first_name, last_name, birth_year, team_id, created_at, updated_at;`
 
-	row := r.pool.QueryRow(ctx, query, user.FirstName, user.LastName, user.BirthYear, user.GroupID)
+	row := r.pool.QueryRow(ctx, query, user.FirstName, user.LastName, user.BirthYear, user.TeamID)
 
 	var userModel UserModel
 
