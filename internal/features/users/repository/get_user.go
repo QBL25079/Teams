@@ -20,13 +20,13 @@ func (r *UserRepository) GetUser(ctx context.Context, id int) (domain.User, erro
 	row := r.pool.QueryRow(ctx, query, id)
 
 	var userModel UserModel
-	err := row.Scan(&userModel.ID, &userModel.FirstName, &userModel.LastName, &userModel.BirthYear, &userModel.GroupID, &userModel.CreatedAt, &userModel.UpdatedAt)
+	err := row.Scan(&userModel.ID, &userModel.FirstName, &userModel.LastName, &userModel.BirthYear, &userModel.TeamID, &userModel.CreatedAt, &userModel.UpdatedAt)
 	if err != nil {
 		if errors.Is(err, postgres_pool.ErrNoRows) {
 			return domain.User{}, fmt.Errorf("user with id='%d': %w", id, errrors.ErrNotFound)
 		}
 		return domain.User{}, fmt.Errorf("scan error %w", err)
 	}
-	userDomain := domain.NewUser(userModel.ID, userModel.FirstName, userModel.LastName, userModel.BirthYear, userModel.GroupID, userModel.CreatedAt, userModel.UpdatedAt)
+	userDomain := domain.NewUser(userModel.ID, userModel.FirstName, userModel.LastName, userModel.BirthYear, userModel.TeamID, userModel.CreatedAt, userModel.UpdatedAt)
 	return userDomain, nil
 }

@@ -17,6 +17,20 @@ type User struct {
 	UpdatedAt time.Time
 }
 
+type UserPatch struct {
+	FirstName *string
+	LastName  *string
+	TeamID    *int
+}
+
+func NewUserPatch(firstName, lastName *string, teamID *int) UserPatch {
+	return UserPatch{
+		FirstName: firstName,
+		LastName:  lastName,
+		TeamID:    teamID,
+	}
+}
+
 func NewUser(ID int, FirstName, LastName string, BirthYear int, TeamID *int, CreatedAt, UpdatedAt time.Time) User {
 	return User{ID: ID, FirstName: FirstName, LastName: LastName, BirthYear: BirthYear, TeamID: TeamID, CreatedAt: CreatedAt, UpdatedAt: UpdatedAt}
 }
@@ -43,5 +57,28 @@ func (u *User) Validate() error {
 		}
 	}
 
+	return nil
+}
+
+func (u *User) ApplyPatch(patch UserPatch) error {
+	tmp := *u
+
+	if patch.FirstName != nil {
+		tmp.FirstName = *patch.FirstName
+	}
+
+	if patch.LastName != nil {
+		tmp.LastName = *patch.LastName
+	}
+
+	if patch.TeamID != nil {
+		tmp.TeamID = patch.TeamID
+	}
+
+	if err := tmp.Validate(); err != nil {
+		return fmt.Errorf("validate updated user: %w", err)
+	}
+
+	*u = tmp
 	return nil
 }

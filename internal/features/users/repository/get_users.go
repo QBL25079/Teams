@@ -32,7 +32,7 @@ func (r *UserRepository) GetUsers(ctx context.Context, limit, offset, teamID *in
 			&userModel.FirstName,
 			&userModel.LastName,
 			&userModel.BirthYear,
-			&userModel.GroupID,
+			&userModel.TeamID,
 			&userModel.CreatedAt,
 			&userModel.UpdatedAt,
 		); err != nil {

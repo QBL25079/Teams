@@ -11,7 +11,7 @@ type UserModel struct {
 	FirstName string
 	LastName  string
 	BirthYear int
-	GroupID   *int
+	TeamID   *int
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -25,7 +25,7 @@ func userDomainsFromModels(users []UserModel) []domain.User {
 			user.FirstName,
 			user.LastName,
 			user.BirthYear,
-			user.GroupID,
+			user.TeamID,
 			user.CreatedAt,
 			user.UpdatedAt,
 		)

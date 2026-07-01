@@ -15,6 +15,7 @@ type UserRepository interface {
 	GetUsers(ctx context.Context, limit, offset, teamID *int) ([]domain.User, error)
 	DeleteUser(ctx context.Context, userID int) error
 	GetUser(ctx context.Context, id int) (domain.User, error)
+	UpdateUser(ctx context.Context, id int, user domain.User) (domain.User, error)
 }
 
 func NewUserService(userRepositry UserRepository) *UserService {

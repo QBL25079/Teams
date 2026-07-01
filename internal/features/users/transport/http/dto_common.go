@@ -11,7 +11,7 @@ type DTOUserResponse struct {
 	FirstName string    `json:"first_name"`
 	LastName  string    `json:"last_name"`
 	BirthYear int       `json:"birth_year"`
-	TeamID    *int      `json:"team_id validate:"omitempty"`
+	TeamID    *int      `json:"team_id" validate:"omitempty"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }

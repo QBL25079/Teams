@@ -19,12 +19,12 @@ func (r *UserRepository) CreateUser(ctx context.Context, user core_domain.User) 
 
 	var userModel UserModel
 
-	err := row.Scan(&userModel.ID, &userModel.FirstName, &userModel.LastName, &userModel.BirthYear, &userModel.GroupID, &userModel.CreatedAt, &userModel.UpdatedAt)
+	err := row.Scan(&userModel.ID, &userModel.FirstName, &userModel.LastName, &userModel.BirthYear, &userModel.TeamID, &userModel.CreatedAt, &userModel.UpdatedAt)
 	if err != nil {
 		return core_domain.User{}, fmt.Errorf("scan error: %w", err)
 	}
 
-	userDomain := core_domain.NewUser(userModel.ID, userModel.FirstName, userModel.LastName, userModel.BirthYear, userModel.GroupID, userModel.CreatedAt, userModel.UpdatedAt)
+	userDomain := core_domain.NewUser(userModel.ID, userModel.FirstName, userModel.LastName, userModel.BirthYear, userModel.TeamID, userModel.CreatedAt, userModel.UpdatedAt)
 
 	return userDomain, nil
 }
